@@ -7,6 +7,7 @@ import {
   registrationUser,
   socialAuthentication,
   updateAccessToken,
+  updateUserInfo,
 } from "../controllers/user.controller";
 import { authorizeRoles, isAuthenticated } from "../middleware/auth";
 const userRouter = express.Router();
@@ -24,5 +25,7 @@ userRouter.get("/refresh-token", updateAccessToken);
 userRouter.get("/me", isAuthenticated, getUserInfo);
 
 userRouter.post("/social-auth", socialAuthentication);
+
+userRouter.put("/update-user-info", isAuthenticated, updateUserInfo);
 
 export default userRouter;
