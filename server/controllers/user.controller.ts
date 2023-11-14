@@ -1,3 +1,5 @@
+import { redis } from "../utils/redis";
+
 require("dotenv").config();
 import { NextFunction, Request, Response } from "express";
 import userModel from "../models/user.model";
@@ -174,6 +176,11 @@ export const logoutUser = CatchAsyncError(
     try {
       res.cookie("access_token", "", { maxAge: 1 });
       res.cookie("refresh_token", "", { maxAge: 1 });
+
+      const userId = req.body.user._id;
+
+      redis.del(userId);
+
       res.status(200).json({
         success: true,
         message: "Logout successfully",
