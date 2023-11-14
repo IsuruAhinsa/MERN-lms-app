@@ -1,5 +1,3 @@
-import { getUserById } from "../services/user.service";
-
 require("dotenv").config();
 import { NextFunction, Request, Response } from "express";
 import userModel from "../models/user.model";
@@ -16,6 +14,7 @@ import {
   sendToken,
 } from "../utils/jwt";
 import { redis } from "../utils/redis";
+import { getUserById } from "../services/user.service";
 
 // register user
 interface IRegistrationBody {
@@ -299,7 +298,9 @@ export const updateUserInfo = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name, email } = req.body as IUpdateUserInfo;
+
       const userId = req.body.user?._id;
+
       const user = await userModel.findById(userId);
 
       if (email && user) {
@@ -317,6 +318,51 @@ export const updateUserInfo = CatchAsyncError(
       await user?.save();
 
       await redis.set(userId, JSON.stringify(user));
+
+      res.status(201).json({
+        success: true,
+        user,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  },
+);
+
+// update user password
+interface IUpdatePassword {
+  oldPassword: string;
+  newPassword: string;
+}
+
+export const updatePassword = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { oldPassword, newPassword } = req.body as IUpdatePassword;
+
+      if (!oldPassword || !newPassword) {
+        return next(new ErrorHandler("Please enter old and new password", 400));
+      }
+
+      const user = await userModel
+        .findById(req.body.user?._id)
+        .select("+password");
+
+      if (user?.password === undefined) {
+        return next(new ErrorHandler("Invalid User", 400));
+      }
+
+      const isPasswordMatch: boolean = await user?.comparePassword(oldPassword);
+
+      if (!isPasswordMatch) {
+        return next(new ErrorHandler("Invalid old Password!", 400));
+      }
+
+      user.password = newPassword;
+
+      await user.save();
+
+      await redis.set(req.body.user?._id, JSON.stringify(user));
 
       res.status(201).json({
         success: true,
