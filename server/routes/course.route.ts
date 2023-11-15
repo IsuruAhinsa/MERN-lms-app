@@ -3,6 +3,7 @@ import { authorizeRoles, isAuthenticated } from "../middleware/auth";
 import {
   editCourse,
   getAllCourses,
+  getCourseByUser,
   getSingleCourse,
   uploadCourse,
 } from "../controllers/course.controller";
@@ -23,18 +24,10 @@ courseRouter.put(
   editCourse,
 );
 
-courseRouter.get(
-  "/get-single-course/:id",
-  isAuthenticated,
-  authorizeRoles("admin"),
-  getSingleCourse,
-);
+courseRouter.get("/get-single-course/:id", isAuthenticated, getSingleCourse);
 
-courseRouter.get(
-  "/get-courses",
-  isAuthenticated,
-  authorizeRoles("admin"),
-  getAllCourses,
-);
+courseRouter.get("/get-courses", isAuthenticated, getAllCourses);
+
+courseRouter.get("/get-course-content/:id", isAuthenticated, getCourseByUser);
 
 export default courseRouter;
