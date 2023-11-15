@@ -23,7 +23,6 @@ export interface ICourseData extends Document {
   title: string;
   description: string;
   videoUrl: string;
-  videoThumbnail: object;
   videoSection: string;
   videoLength: number;
   videoPlayer: string;
@@ -73,7 +72,6 @@ const courseDataSchema = new Schema<ICourseData>({
   title: String,
   description: String,
   videoUrl: String,
-  videoThumbnail: Object,
   videoSection: String,
   videoLength: Number,
   videoPlayer: String,
@@ -88,8 +86,8 @@ const courseSchema = new Schema<ICourse>({
   price: { type: Number, required: true },
   estimatePrice: Number,
   thumbnail: {
-    public_id: { type: String, required: true },
-    url: { type: String, required: true },
+    public_id: String,
+    url: String,
   },
   tags: { type: String, required: true },
   level: { type: String, required: true },
