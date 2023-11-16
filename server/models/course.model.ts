@@ -9,10 +9,10 @@ export interface IComment extends Document {
 }
 
 export interface IReview extends Document {
-  user: object;
+  user: IUser;
   rating: number;
   comment: string;
-  commentReplies: IComment[];
+  commentReplies?: IComment[];
 }
 
 export interface ILink extends Document {
