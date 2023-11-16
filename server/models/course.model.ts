@@ -3,8 +3,8 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface IComment extends Document {
   user: object;
-  comment: string;
-  commentReplies?: IComment[];
+  question: string;
+  questionReplies?: IComment[];
 }
 
 export interface IReview extends Document {
@@ -50,8 +50,8 @@ export interface ICourse extends Document {
 
 const commentSchema = new Schema<IComment>({
   user: Object,
-  comment: String,
-  commentReplies: Object,
+  question: String,
+  questionReplies: Object,
 });
 
 const reviewSchema = new Schema<IReview>({
