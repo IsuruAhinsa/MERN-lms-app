@@ -1,10 +1,11 @@
 require("dotenv").config();
 import mongoose, { Document, Model, Schema } from "mongoose";
+import { IUser } from "./user.model";
 
 export interface IComment extends Document {
-  user: object;
+  user: IUser;
   question: string;
-  questionReplies?: IComment[];
+  questionReplies: IComment[];
 }
 
 export interface IReview extends Document {
@@ -51,7 +52,7 @@ export interface ICourse extends Document {
 const commentSchema = new Schema<IComment>({
   user: Object,
   question: String,
-  questionReplies: Object,
+  questionReplies: [Object],
 });
 
 const reviewSchema = new Schema<IReview>({
