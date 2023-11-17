@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import ejs from "ejs";
 import path from "path";
 import sendMail from "../utils/sendMail";
+import notificationModel from "../models/notification.model";
 
 // upload course
 export const uploadCourse = CatchAsyncError(
@@ -208,6 +209,13 @@ export const addQuestion = CatchAsyncError(
       // add this question to our course content
       courseContent.questions.push(newQuestion);
 
+      // create notification
+      await notificationModel.create({
+        user: req.body.user?._id,
+        title: "New Question Received",
+        message: `You have a new question in ${courseContent?.title}`,
+      });
+
       // save the updated course
       await course?.save();
 
@@ -271,6 +279,11 @@ export const addAnswer = CatchAsyncError(
 
       if (req.body.user?._id === question.user._id) {
         // create a notification
+        await notificationModel.create({
+          user: req.body.user?._id,
+          title: "New Question Reply Received",
+          message: `You have a new question reply in ${courseContent?.title}`,
+        });
       } else {
         const data = {
           name: question.user.name,
@@ -363,6 +376,11 @@ export const addReview = CatchAsyncError(
       };
 
       // create notification
+      await notificationModel.create({
+        user: req.body.user?._id,
+        title: "New Review",
+        message: `You have a new review to ${course?.name}`,
+      });
 
       res.status(200).json({
         success: true,
