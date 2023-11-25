@@ -3,10 +3,12 @@ import { Poppins } from "next/font/google";
 import { Josefin_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/app/utils/theme-provider";
-import React from "react";
+import React, { FC, ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "./Provider";
 import { SessionProvider } from "next-auth/react";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import Loader from "@/app/components/Loader";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -19,6 +21,11 @@ const josefin = Josefin_Sans({
   weight: ["400", "500", "600", "700"],
   variable: "--font-Josefin",
 });
+
+const Custom: FC<{ children: ReactNode }> = ({ children }) => {
+  const { isLoading } = useLoadUserQuery({});
+  return <>{isLoading ? <Loader /> : <>{children}</>}</>;
+};
 
 export default function RootLayout({
   children,
@@ -33,7 +40,7 @@ export default function RootLayout({
         <Providers>
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              {children}
+              <Custom>{children}</Custom>
               <Toaster position="top-center" reverseOrder={false} />
             </ThemeProvider>
           </SessionProvider>

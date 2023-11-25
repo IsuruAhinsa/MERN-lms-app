@@ -38,4 +38,4 @@ export const apiSlice = createApi({
   }),
 });
 
-export const { useRefreshTokenQuery, useLazyLoadUserQuery } = apiSlice;
+export const { useRefreshTokenQuery, useLoadUserQuery } = apiSlice;
