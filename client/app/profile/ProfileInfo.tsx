@@ -3,8 +3,12 @@ import Image from "next/image";
 import { AiOutlineCamera } from "react-icons/ai";
 import { styles } from "@/app/styles/styles";
 import avatarIcon from "@/public/assets/avatar.png";
-import { useUpdateAvatarMutation } from "@/redux/features/user/userApi";
+import {
+  useEditProfileMutation,
+  useUpdateAvatarMutation,
+} from "@/redux/features/user/userApi";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import { toast } from "react-hot-toast";
 
 type Props = {
   avatar: string | null;
@@ -14,6 +18,8 @@ type Props = {
 const ProfileInfo: FC<Props> = ({ avatar, user }) => {
   const [name, setName] = useState(user && user.name);
   const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation();
+  const [editProfile, { isSuccess: success, error: updateError }] =
+    useEditProfileMutation();
   const [loadUser, setLoadUser] = useState(false);
   useLoadUserQuery(undefined, { skip: !loadUser });
 
@@ -32,16 +38,24 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess || success) {
       setLoadUser(true);
+      toast.success("Profile Updated Successfully!");
     }
 
-    if (error) {
+    if (error || updateError) {
       console.log(error);
     }
-  }, [isSuccess]);
+  }, [isSuccess, success, updateError]);
 
-  const handleSubmit = async (e: any) => {};
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (name !== "") {
+      await editProfile({
+        name: name,
+      });
+    }
+  };
 
   return (
     <>
