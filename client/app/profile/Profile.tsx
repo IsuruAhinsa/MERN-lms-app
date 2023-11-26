@@ -3,6 +3,7 @@ import React, { FC, useState } from "react";
 import ProfileSidebar from "@/app/profile/ProfileSidebar";
 import { useLogOutQuery } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
+import ProfileInfo from "@/app/profile/ProfileInfo";
 
 type Props = {
   user: any;
@@ -34,7 +35,7 @@ const Profile: FC<Props> = ({ user }) => {
   }
 
   return (
-    <div className="w-[85%] flex mx-auto h-screen">
+    <div className="w-[85%] flex mx-auto">
       <div
         className={`w-[60px] 800px:w-[310px] h-[450px] dark:bg-slate-900 bg-opacity-90 dark:border-[#ffffff1d] border border-gray-300 rounded-[5px] shadow-sm mt-[80px] mb-[80px] sticky ${
           scroll ? "top-[120px]" : "top-[30px]"
@@ -48,6 +49,11 @@ const Profile: FC<Props> = ({ user }) => {
           logoutHandler={logoutHandler}
         />
       </div>
+      {active === 1 && (
+        <div className="w-full h-full bg-transparent mt-[80px]">
+          <ProfileInfo user={user} avatar={avatar} />
+        </div>
+      )}
     </div>
   );
 };

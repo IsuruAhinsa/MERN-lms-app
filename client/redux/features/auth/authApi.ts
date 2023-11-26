@@ -14,7 +14,6 @@ type RegistrationData = {};
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // first endpoint here
     register: builder.mutation<RegistrationResponse, RegistrationData>({
       query: (data) => ({
         url: "registration",
@@ -36,7 +35,6 @@ export const authApi = apiSlice.injectEndpoints({
       },
     }),
 
-    // second endpoint here
     activation: builder.mutation({
       query: ({ activation_token, activation_code }) => ({
         url: "activate-user",
@@ -45,7 +43,6 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    // third endpoint here
     login: builder.mutation({
       query: ({ email, password }) => ({
         url: "login",
