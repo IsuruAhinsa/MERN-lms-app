@@ -16,8 +16,8 @@ const Profile: FC<Props> = ({ user }) => {
   const [active, setActive] = useState(1);
   const [logout, setLogout] = useState(false);
 
-  useLogOutQuery(undefined, {
-    skip: !logout,
+  const {} = useLogOutQuery(undefined, {
+    skip: !logout ? true : false,
   });
 
   const logoutHandler = async () => {

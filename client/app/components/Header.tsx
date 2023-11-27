@@ -10,7 +10,7 @@ import Verification from "./Auth/Verification";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import avatar from "@/public/assets/avatar.png";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import {
   useLogOutQuery,
   useSocialAuthMutation,
@@ -28,35 +28,40 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
   const { user } = useSelector((state: any) => state.auth);
-  const { data } = useSession();
+  // const { data } = useSession();
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
   const [logout, setLogout] = useState(false);
 
-  useLogOutQuery(undefined, {
-    skip: !logout,
+  const { } = useLogOutQuery(undefined, {
+    skip: !logout ? true : false,
   });
 
   useEffect(() => {
-    if (!user) {
-      if (data) {
-        socialAuth({
-          email: data?.user?.email,
-          name: data?.user?.name,
-          avatar: data?.user?.image,
-        });
-      }
+    // if (!user) {
+    //   if (data) {
+    //     socialAuth({
+    //       email: data?.user?.email,
+    //       name: data?.user?.name,
+    //       avatar: data?.user?.image,
+    //     });
+    //   }
+    // }
+
+    // if (data === null) {
+    //   if (isSuccess) {
+    //     toast.success("Login Successfully!");
+    //   }
+    // }
+
+    // if (data === null) {
+    //   setLogout(true);
+    // }
+
+    if (isSuccess) {
+      toast.success("Login Successfully!");
     }
 
-    if (data === null) {
-      if (isSuccess) {
-        toast.success("Login Successfully!");
-      }
-    }
-
-    if (data === null) {
-      setLogout(true);
-    }
-  }, [data, user, isSuccess]);
+  }, [isSuccess]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -76,11 +81,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
   return (
     <div className="w-full relative">
       <div
-        className={`${
-          active
-            ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#fffff1c] shadow-xl transition duration-500"
-            : "w-full border-b dark:border-[#fffff1c] h-[80px] z-[80] dark:shadow"
-        }`}
+        className={`${active
+          ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#fffff1c] shadow-xl transition duration-500"
+          : "w-full border-b dark:border-[#fffff1c] h-[80px] z-[80] dark:shadow"
+          }`}
       >
         <div className="w-[95%] 800px:w-[92%] m-auto py-2 h-full">
           <div className="w-full h-[80px] flex items-center justify-between p-3">
