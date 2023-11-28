@@ -47,7 +47,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
     if (error || updateError) {
       console.log(error);
     }
-  }, [isSuccess, success, updateError]);
+  }, [isSuccess, success, updateError, error]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
