@@ -3,7 +3,7 @@ import React, { FC, useState } from "react";
 import Protected from "@/app/hooks/useProtected";
 import Heading from "@/app/utils/heading";
 import Header from "@/app/components/Header";
-import Profile from "@/app/profile/Profile";
+import Profile from "@/app/components/Profile/Profile";
 import { useSelector } from "react-redux";
 
 type Props = {};

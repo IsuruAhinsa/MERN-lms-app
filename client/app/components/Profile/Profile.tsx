@@ -1,10 +1,10 @@
 "use client";
 import React, { FC, useState } from "react";
-import ProfileSidebar from "@/app/profile/ProfileSidebar";
+import ProfileSidebar from "@/app/components/Profile/ProfileSidebar";
 import { useLogOutQuery } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
-import ProfileInfo from "@/app/profile/ProfileInfo";
-import ChangePassword from "@/app/profile/ChangePassword";
+import ProfileInfo from "@/app/components/Profile/ProfileInfo";
+import ChangePassword from "@/app/components/Profile/ChangePassword";
 
 type Props = {
   user: any;
@@ -16,7 +16,7 @@ const Profile: FC<Props> = ({ user }) => {
   const [active, setActive] = useState(1);
   const [logout, setLogout] = useState(false);
 
-  const {} = useLogOutQuery(undefined, {
+  const { } = useLogOutQuery(undefined, {
     skip: !logout ? true : false,
   });
 
@@ -38,9 +38,8 @@ const Profile: FC<Props> = ({ user }) => {
   return (
     <div className="w-[85%] flex mx-auto">
       <div
-        className={`w-[60px] 800px:w-[310px] h-[450px] dark:bg-slate-900 bg-opacity-90 dark:border-[#ffffff1d] border border-gray-300 rounded-[5px] shadow-sm mt-[80px] mb-[80px] sticky ${
-          scroll ? "top-[120px]" : "top-[30px]"
-        } left-[30px]`}
+        className={`w-[60px] 800px:w-[310px] h-[450px] dark:bg-slate-900 bg-opacity-90 dark:border-[#ffffff1d] border border-gray-300 rounded-[5px] shadow-sm mt-[80px] mb-[80px] sticky ${scroll ? "top-[120px]" : "top-[30px]"
+          } left-[30px]`}
       >
         <ProfileSidebar
           user={user}
