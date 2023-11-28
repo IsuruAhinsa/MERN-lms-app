@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { FC, useState } from "react";
 import Protected from "@/app/hooks/useProtected";
 import Heading from "@/app/utils/heading";
@@ -8,14 +8,14 @@ import { useSelector } from "react-redux";
 
 type Props = {};
 
-const page: FC<Props> = (props) => {
+const Page: FC<Props> = () => {
   const [open, setOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(0);
   const [route, setRoute] = useState("Login");
   const { user } = useSelector((state: any) => state.auth);
 
   return (
-    <div>
+    <div className="h-screen">
       <Protected>
         <Heading
           title={`${user?.name}'s profile`}
@@ -37,4 +37,4 @@ const page: FC<Props> = (props) => {
   );
 };
 
-export default page;
+export default Page;

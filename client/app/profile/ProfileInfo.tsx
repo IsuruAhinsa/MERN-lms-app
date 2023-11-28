@@ -1,3 +1,4 @@
+"use client"
 import React, { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import { AiOutlineCamera } from "react-icons/ai";
