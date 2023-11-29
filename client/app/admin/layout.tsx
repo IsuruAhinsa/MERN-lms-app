@@ -33,7 +33,7 @@ export default function DashboardLayout({
           setToggled={setToggled}
           setBroken={setBroken}
         />
-        <main>
+        <main className="w-full">
           <div style={{ padding: "16px 24px", color: "#44596e" }}>
             <DashboardHeader
               handleThemeChange={handleThemeChange}
