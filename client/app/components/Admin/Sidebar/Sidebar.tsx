@@ -27,6 +27,7 @@ import {
   IoLogOut,
 } from "./Icons";
 import { SidebarHeader } from "./SidebarHeader";
+import Link from "next/link";
 
 type Props = {
   theme: string;
@@ -150,20 +151,27 @@ const AdminSidebar: FC<Props> = ({
             </Typography>
           </div>
           <Menu menuItemStyles={menuItemStyles}>
-            <MenuItem icon={<IoHome />}>Dashboard</MenuItem>
+            <MenuItem component={<Link href="/admin" />} icon={<IoHome />}>
+              Dashboard
+            </MenuItem>
           </Menu>
 
           <Menu menuItemStyles={menuItemStyles}>
             <SubMenu label="Data">
-              <MenuItem icon={<IoPeopleSharp />}> Users</MenuItem>
+              <MenuItem icon={<IoPeopleSharp />}>Users</MenuItem>
               <MenuItem icon={<IoReader />}> Invoices</MenuItem>
             </SubMenu>
             <SubMenu label="Content">
-              <MenuItem icon={<IoAddCircle />}> Create Courses</MenuItem>
+              <MenuItem
+                component={<Link href="/admin/create-course" />}
+                icon={<IoAddCircle />}
+              >
+                Create Courses
+              </MenuItem>
               <MenuItem icon={<IoFilm />}> Live Courses</MenuItem>
             </SubMenu>
             <SubMenu label="Customization">
-              <MenuItem icon={<IoNewspaperSharp />}> Hero</MenuItem>
+              <MenuItem icon={<IoNewspaperSharp />}>Hero</MenuItem>
               <MenuItem icon={<IoChatboxEllipses />}> FAQ</MenuItem>
               <MenuItem icon={<IoFileTrayFull />}> Categories</MenuItem>
             </SubMenu>
