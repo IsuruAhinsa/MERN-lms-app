@@ -25,7 +25,7 @@ export default function DashboardLayout({
   };
   return (
     <AdminProtected>
-      <div className="flex h-screen">
+      <div className="flex h-full">
         <AdminSidebar
           theme={sidebarTheme}
           collapsed={collapsed}

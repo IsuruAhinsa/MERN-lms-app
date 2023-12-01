@@ -115,14 +115,16 @@ const CourseData: FC<Props> = ({
 
       <div className="flex justify-between">
         <button
-          className={`${styles.button} w-56 text-white text-sm`}
+          className={`${styles.button} text-white text-sm`}
           onClick={prevButton}
+          style={{ width: "20%" }}
         >
           Previous
         </button>
         <button
+          style={{ width: "20%" }}
           onClick={handleOptions}
-          className={`${styles.button} w-56 text-white text-sm`}
+          className={`${styles.button} text-white text-sm`}
         >
           Next
         </button>

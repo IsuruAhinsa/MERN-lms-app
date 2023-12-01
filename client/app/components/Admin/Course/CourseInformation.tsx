@@ -123,18 +123,18 @@ const CourseInformation: FC<Props> = ({
           </div>
 
           <div className="w-[50%]">
-            <label htmlFor="esitmatedPrice" className={styles.label}>
+            <label htmlFor="estimatedPrice" className={styles.label}>
               Esitmated Price (Optional)
             </label>
             <input
               type="number"
-              name="esitmatedPrice"
+              name="estimatedPrice"
               required
-              value={courseInfo.esitmatedPrice}
+              value={courseInfo.estimatedPrice}
               onChange={(e: any) =>
-                setCourseInfo({ ...courseInfo, esitmatedPrice: e.target.value })
+                setCourseInfo({ ...courseInfo, estimatedPrice: e.target.value })
               }
-              id="esitmatedPrice"
+              id="estimatedPrice"
               placeholder="2450.00"
               className={`${styles.input}`}
             />
