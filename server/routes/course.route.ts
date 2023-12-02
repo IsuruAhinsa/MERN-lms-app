@@ -33,9 +33,9 @@ courseRouter.put(
   editCourse,
 );
 
-courseRouter.get("/get-single-course/:id", updateAccessToken, isAuthenticated, getSingleCourse);
+courseRouter.get("/get-single-course/:id", isAuthenticated, getSingleCourse);
 
-courseRouter.get("/get-courses", updateAccessToken, isAuthenticated, getAllCourses);
+courseRouter.get("/get-courses", isAuthenticated, getAllCourses);
 
 courseRouter.get("/get-course-content/:id", updateAccessToken, isAuthenticated, getCourseByUser);
 
