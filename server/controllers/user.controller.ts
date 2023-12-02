@@ -436,7 +436,7 @@ export const updateProfilePicture = CatchAsyncError(
 
 // get all users --- only for admin
 export const getAllUsers = CatchAsyncError(
-  async (res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       await getAllUsersService(res);
     } catch (error: any) {

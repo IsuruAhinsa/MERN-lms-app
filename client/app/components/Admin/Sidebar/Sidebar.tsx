@@ -158,7 +158,12 @@ const AdminSidebar: FC<Props> = ({
 
           <Menu menuItemStyles={menuItemStyles}>
             <SubMenu label="Data">
-              <MenuItem icon={<IoPeopleSharp />}>Users</MenuItem>
+              <MenuItem
+                component={<Link href="/admin/users" />}
+                icon={<IoPeopleSharp />}
+              >
+                Users
+              </MenuItem>
               <MenuItem icon={<IoReader />}> Invoices</MenuItem>
             </SubMenu>
             <SubMenu label="Content">
