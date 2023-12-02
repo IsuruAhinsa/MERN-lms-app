@@ -4,7 +4,10 @@ import CourseData from "@/app/components/Admin/Course/CourseData";
 import CourseInformation from "@/app/components/Admin/Course/CourseInformation";
 import CourseOptions from "@/app/components/Admin/Course/CourseOptions";
 import CoursePreview from "@/app/components/Admin/Course/CoursePreview";
+import { useCreateCourseMutation } from "@/redux/features/course/courseApi";
+import { redirect } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -20,7 +23,7 @@ const Page = (props: Props) => {
     demoUrl: "",
     thumbnail: "",
   });
-  const [benifits, setBenifits] = useState([{ title: "" }]);
+  const [benefits, SetBenefits] = useState([{ title: "" }]);
   const [prerequisites, setPrerequisites] = useState([{ title: "" }]);
   const [courseContentData, setCourseContentData] = useState([
     {
@@ -38,11 +41,13 @@ const Page = (props: Props) => {
     },
   ]);
   const [courseData, setCourseData] = useState({});
+  const [createCourse, { isSuccess, error, isLoading }] =
+    useCreateCourseMutation();
 
   const handleSubmit = async () => {
-    // format benifits array
-    const formattedBenifits = benifits.map((benifit) => ({
-      title: benifit.title,
+    // format benefits array
+    const formattedBenifits = benefits.map((benefit) => ({
+      title: benefit.title,
     }));
 
     // format prerequisites array
@@ -74,9 +79,9 @@ const Page = (props: Props) => {
       demoUrl: courseInfo.demoUrl,
       thumbnail: courseInfo.thumbnail,
       totalVideos: courseContentData.length,
-      benifits: formattedBenifits,
+      benefits: formattedBenifits,
       prerequisites: formattedPrerequisites,
-      courseContent: formattedCourseContent,
+      courseData: formattedCourseContent,
     };
 
     setCourseData(data);
@@ -84,7 +89,25 @@ const Page = (props: Props) => {
 
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
+
+    if (!isLoading) {
+      await createCourse(data);
+    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Course created successfully!");
+      redirect("/admin/all-courses");
+    }
+
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+      }
+    }
+  }, [isSuccess, error, isLoading]);
   return (
     <div className="w-full flex min-h-screen">
       <div className="w-[80%]">
@@ -99,8 +122,8 @@ const Page = (props: Props) => {
 
         {active === 1 && (
           <CourseData
-            benifits={benifits}
-            setBenifits={setBenifits}
+            benefits={benefits}
+            SetBenefits={SetBenefits}
             prerequisites={prerequisites}
             setPrerequisites={setPrerequisites}
             active={active}

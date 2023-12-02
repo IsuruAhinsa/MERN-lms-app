@@ -4,8 +4,8 @@ import React, { FC } from "react";
 import toast from "react-hot-toast";
 
 type Props = {
-  benifits: { title: string }[];
-  setBenifits: (benifits: { title: string }[]) => void;
+  benefits: { title: string }[];
+  SetBenefits: (benefits: { title: string }[]) => void;
   prerequisites: { title: string }[];
   setPrerequisites: (prerequisites: { title: string }[]) => void;
   active: number;
@@ -13,21 +13,21 @@ type Props = {
 };
 
 const CourseData: FC<Props> = ({
-  benifits,
-  setBenifits,
+  benefits,
+  SetBenefits,
   prerequisites,
   setPrerequisites,
   active,
   setActive,
 }) => {
   const handleBenifitChange = (index: number, value: any) => {
-    const updatedBenifits = [...benifits];
+    const updatedBenifits = [...benefits];
     updatedBenifits[index].title = value;
-    setBenifits(updatedBenifits);
+    SetBenefits(updatedBenifits);
   };
 
   const handleAddBenifit = () => {
-    setBenifits([...benifits, { title: "" }]);
+    SetBenefits([...benefits, { title: "" }]);
   };
 
   const handlePrerequisiteChange = (index: number, value: any) => {
@@ -46,7 +46,7 @@ const CourseData: FC<Props> = ({
 
   const handleOptions = () => {
     if (
-      benifits[benifits.length - 1]?.title !== "" &&
+      benefits[benefits.length - 1]?.title !== "" &&
       prerequisites[prerequisites.length - 1]?.title !== ""
     ) {
       setActive(active + 1);
@@ -58,19 +58,19 @@ const CourseData: FC<Props> = ({
   return (
     <div className="w-[80%] m-auto mt-24 block">
       <div>
-        <label htmlFor="benifit" className={`${styles.label} text-[20px]`}>
+        <label htmlFor="benefit" className={`${styles.label} text-[20px]`}>
           01. What are the benefits for students in this course?
         </label>
-        {benifits.map((benifit: any, index: number) => (
+        {benefits.map((benefit: any, index: number) => (
           <input
             type="text"
-            name="benifit"
-            id="benifit"
+            name="benefit"
+            id="benefit"
             key={index}
             required
             placeholder="You will be able to build a fullstack LMS platform"
             className={`${styles.input} my-2`}
-            value={benifit.title}
+            value={benefit.title}
             onChange={(e) => handleBenifitChange(index, e.target.value)}
           />
         ))}

@@ -98,7 +98,7 @@ const CoursePreview: FC<Props> = ({
           What you will learn from this course?
         </h1>
       </div>
-      {courseData?.benifits?.map((item: any, index: number) => (
+      {courseData?.benefits?.map((item: any, index: number) => (
         <div key={index} className="w-full flex 800px:items-center py-2">
           <div className="w-[15px] mr-1">
             <IoCheckmarkDoneOutline size={20} />

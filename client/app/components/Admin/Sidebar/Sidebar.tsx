@@ -168,7 +168,12 @@ const AdminSidebar: FC<Props> = ({
               >
                 Create Courses
               </MenuItem>
-              <MenuItem icon={<IoFilm />}> Live Courses</MenuItem>
+              <MenuItem
+                component={<Link href="/admin/all-courses" />}
+                icon={<IoFilm />}
+              >
+                Live Courses
+              </MenuItem>
             </SubMenu>
             <SubMenu label="Customization">
               <MenuItem icon={<IoNewspaperSharp />}>Hero</MenuItem>
