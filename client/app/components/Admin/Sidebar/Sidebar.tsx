@@ -186,7 +186,13 @@ const AdminSidebar: FC<Props> = ({
               <MenuItem icon={<IoFileTrayFull />}> Categories</MenuItem>
             </SubMenu>
             <SubMenu label="Controllers">
-              <MenuItem icon={<IoPeopleCircle />}> Manage Team</MenuItem>
+              <MenuItem
+                component={<Link href="/admin/team" />}
+                icon={<IoPeopleCircle />}
+              >
+                {" "}
+                Manage Team
+              </MenuItem>
             </SubMenu>
             <SubMenu label="Analytics" icon={<IoFootsteps />}>
               <MenuItem icon={<IoBarChart />}> Course Analytics</MenuItem>
