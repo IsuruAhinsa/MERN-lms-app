@@ -1,18 +1,34 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useGetAllCoursesQuery } from "@/redux/features/course/courseApi";
 import { useTheme } from "next-themes";
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import Loader from "@/app/components/Loader";
 import { format } from "timeago.js";
+import { useDeleteCourseMutation } from "@/redux/features/course/courseApi";
+import toast from "react-hot-toast";
 
 type Props = {};
 
 const Page = (props: Props) => {
   const { theme, setTheme } = useTheme();
-  const { isLoading, data } = useGetAllCoursesQuery({});
+  const { isLoading, data, refetch } = useGetAllCoursesQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
+  const [open, setOpen] = useState(false);
+  const [courseId, setCourseId] = useState("");
+  const [deleteCourse, { isSuccess, error }] = useDeleteCourseMutation();
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
@@ -41,7 +57,12 @@ const Page = (props: Props) => {
       renderCell: (params: any) => {
         return (
           <>
-            <Button>
+            <Button
+              onClick={() => {
+                setOpen(!open);
+                setCourseId(params.row.id);
+              }}
+            >
               <AiOutlineDelete size={20} />
             </Button>
           </>
@@ -64,6 +85,26 @@ const Page = (props: Props) => {
         });
       });
   }
+
+  const handleDelete = async () => {
+    const id = courseId;
+    await deleteCourse(id);
+    setOpen(false);
+    refetch();
+  };
+
+  useEffect(() => {
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+      }
+    }
+
+    if (isSuccess) {
+      toast.success("course deleted successfully!");
+    }
+  }, [isSuccess, error]);
 
   return (
     <div className="mt-[50px]">
@@ -127,6 +168,18 @@ const Page = (props: Props) => {
           </Box>
         </Box>
       )}
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to detele this course?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>No, Close</Button>
+          <Button onClick={handleDelete}>Yes, Delete</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
