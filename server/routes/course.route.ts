@@ -13,56 +13,48 @@ import {
   getSingleCourse,
   uploadCourse,
 } from "../controllers/course.controller";
-import { updateAccessToken } from "../controllers/user.controller";
 
 const courseRouter = express.Router();
 
 courseRouter.post(
-  "/create-course", 
-  updateAccessToken,
+  "/create-course",
   isAuthenticated,
   authorizeRoles("admin"),
-  uploadCourse,
+  uploadCourse
 );
 
 courseRouter.put(
-  "/edit-course/:id", 
-  updateAccessToken,
+  "/edit-course/:id",
   isAuthenticated,
   authorizeRoles("admin"),
-  editCourse,
+  editCourse
 );
 
 courseRouter.get("/get-single-course/:id", isAuthenticated, getSingleCourse);
 
 courseRouter.get("/get-courses", isAuthenticated, getAllCourses);
 
-courseRouter.get("/get-course-content/:id", updateAccessToken, isAuthenticated, getCourseByUser);
+courseRouter.get("/get-course-content/:id", isAuthenticated, getCourseByUser);
 
-courseRouter.put("/add-question", updateAccessToken, isAuthenticated, addQuestion);
+courseRouter.put("/add-question", isAuthenticated, addQuestion);
 
-courseRouter.put("/add-answer", updateAccessToken, isAuthenticated, addAnswer);
+courseRouter.put("/add-answer", isAuthenticated, addAnswer);
 
-courseRouter.put("/add-review/:id", updateAccessToken, isAuthenticated, addReview);
+courseRouter.put("/add-review/:id", isAuthenticated, addReview);
 
 courseRouter.put(
-  "/add-reply-to-review", 
-  updateAccessToken,
+  "/add-reply-to-review",
   isAuthenticated,
   authorizeRoles("admin"),
-  addReplyToReview,
+  addReplyToReview
 );
 
-courseRouter.post(
-  "/getVdoCipherOTP", 
-  generateVideoUrl
-)
+courseRouter.post("/getVdoCipherOTP", generateVideoUrl);
 
 courseRouter.delete(
-  "/delete-course/:id", 
-  updateAccessToken,
+  "/delete-course/:id",
   isAuthenticated,
   authorizeRoles("admin"),
-  deleteCourse,
+  deleteCourse
 );
 export default courseRouter;

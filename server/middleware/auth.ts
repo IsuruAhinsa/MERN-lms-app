@@ -3,6 +3,7 @@ import { CatchAsyncError } from "./catchAsyncErrors";
 import ErrorHandler from "../utils/ErrorHandler";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { redis } from "../utils/redis";
+import { updateAccessToken } from "../controllers/user.controller";
 
 // authenticated user
 export const isAuthenticated = CatchAsyncError(
@@ -11,31 +12,37 @@ export const isAuthenticated = CatchAsyncError(
 
     if (!access_token) {
       return next(
-        new ErrorHandler("Please login to access this resource", 400),
+        new ErrorHandler("Please login to access this resource", 400)
       );
     }
 
-    const decoded = jwt.verify(
-      access_token,
-      process.env.ACCESS_TOKEN as string,
-    ) as JwtPayload;
+    const decoded = jwt.decode(access_token) as JwtPayload;
 
     if (!decoded) {
       return next(new ErrorHandler("Invalid access token", 400));
     }
 
-    const user = await redis.get(decoded.id);
+    // check if the access token is expired
+    if (decoded.exp && decoded.exp <= Date.now() / 1000) {
+      try {
+        updateAccessToken(req, res, next);
+      } catch (error: any) {
+        return next(error);
+      }
+    } else {
+      const user = await redis.get(decoded.id);
 
-    if (!user) {
-      return next(
-        new ErrorHandler("Please login to access this resource!", 400),
-      );
+      if (!user) {
+        return next(
+          new ErrorHandler("Please login to access this resource!", 400)
+        );
+      }
+
+      req.body.user = JSON.parse(user);
+
+      next();
     }
-
-    req.body.user = JSON.parse(user);
-
-    next();
-  },
+  }
 );
 
 // validate user role
@@ -45,8 +52,8 @@ export const authorizeRoles = (...roles: string[]) => {
       return next(
         new ErrorHandler(
           `Role: ${req.body.user?.role} is not allowed to access this resource`,
-          403,
-        ),
+          403
+        )
       );
     }
     next();

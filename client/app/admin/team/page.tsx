@@ -1,13 +1,17 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "@/app/components/Loader";
 import { styles } from "@/app/styles/styles";
-import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
-import { Box, Button } from "@mui/material";
+import {
+  useGetAllUsersQuery,
+  useUpdateUserRoleMutation,
+} from "@/redux/features/user/userApi";
+import { Box, Button, Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme } from "next-themes";
 import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
 import { format } from "timeago.js";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -15,6 +19,10 @@ const Page = (props: Props) => {
   const { theme, setTheme } = useTheme();
   const { isLoading, data } = useGetAllUsersQuery({});
   const [active, setActive] = useState(false);
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("admin");
+  const [updateUserRole, { isSuccess, error: updateUserRoleError }] =
+    useUpdateUserRoleMutation();
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
@@ -70,6 +78,24 @@ const Page = (props: Props) => {
           });
         });
   }
+
+  const handleSubmit = async () => {
+    await updateUserRole({ email, role });
+  };
+
+  useEffect(() => {
+    if (updateUserRoleError) {
+      if ("data" in updateUserRoleError) {
+        const errorData = updateUserRoleError as any;
+        toast.error(errorData.data.message);
+      }
+    }
+
+    if (isSuccess) {
+      toast.success("User role updated successfully!");
+      setActive(false);
+    }
+  }, [isSuccess, updateUserRoleError]);
   return (
     <div className="mt-[50px]">
       {isLoading ? (
@@ -78,7 +104,7 @@ const Page = (props: Props) => {
         <Box m={"20px"}>
           <div className="flex justify-end">
             <button
-              className={`${styles.button} w-[200px] text-white`}
+              className={`${styles.button} !w-[200px] text-white`}
               onClick={() => setActive(!active)}
             >
               Add New Member
@@ -139,6 +165,32 @@ const Page = (props: Props) => {
             <DataGrid checkboxSelection rows={rows} columns={columns} />
           </Box>
         </Box>
+      )}
+
+      {active && (
+        <Modal open={active} onClose={() => setActive(!active)}>
+          <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none">
+            <h1 className={styles.title}>Add New Member</h1>
+            <div className="mt-3 space-y-4">
+              <input
+                type="email"
+                placeholder="Enter email..."
+                className={styles.input}
+                onChange={(e: any) => setEmail(e.target.value)}
+              />
+              <select
+                className={styles.input}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+              <button className={`${styles.button}`} onClick={handleSubmit}>
+                Submit
+              </button>
+            </div>
+          </Box>
+        </Modal>
       )}
     </div>
   );

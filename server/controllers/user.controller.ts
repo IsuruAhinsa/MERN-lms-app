@@ -54,7 +54,7 @@ export const registrationUser = CatchAsyncError(
 
       const html = await ejs.renderFile(
         path.join(__dirname, "../mails/activation-mail.ejs"),
-        data,
+        data
       );
 
       try {
@@ -76,7 +76,7 @@ export const registrationUser = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.methods, 400));
     }
-  },
+  }
 );
 
 interface IActivationToken {
@@ -95,7 +95,7 @@ export const createActivationToken = (user: any): IActivationToken => {
     process.env.ACTIVATION_SECRET as Secret,
     {
       expiresIn: "5m",
-    },
+    }
   );
 
   return { token, activationCode };
@@ -115,7 +115,7 @@ export const activateUser = CatchAsyncError(
 
       const newUser: { user: IUser; activationCode: string } = jwt.verify(
         activation_token,
-        process.env.ACTIVATION_SECRET as string,
+        process.env.ACTIVATION_SECRET as string
       ) as { user: IUser; activationCode: string };
 
       if (newUser.activationCode !== activation_code) {
@@ -142,7 +142,7 @@ export const activateUser = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // login user
@@ -176,7 +176,7 @@ export const loginUser = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // logout user
@@ -197,7 +197,7 @@ export const logoutUser = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // update access token
@@ -207,7 +207,7 @@ export const updateAccessToken = CatchAsyncError(
       const refresh_token = req.cookies.refresh_token as string;
       const decoded = jwt.verify(
         refresh_token,
-        process.env.REFRESH_TOKEN as string,
+        process.env.REFRESH_TOKEN as string
       ) as JwtPayload;
 
       const message = "Could not refresh token";
@@ -220,7 +220,7 @@ export const updateAccessToken = CatchAsyncError(
 
       if (!session) {
         return next(
-          new ErrorHandler("Please login for access this resources", 400),
+          new ErrorHandler("Please login for access this resources", 400)
         );
       }
 
@@ -231,7 +231,7 @@ export const updateAccessToken = CatchAsyncError(
         process.env.ACCESS_TOKEN as string,
         {
           expiresIn: "5m",
-        },
+        }
       );
 
       const refreshToken = jwt.sign(
@@ -239,7 +239,7 @@ export const updateAccessToken = CatchAsyncError(
         process.env.REFRESH_TOKEN as string,
         {
           expiresIn: "3d",
-        },
+        }
       );
 
       req.body.user = user;
@@ -254,11 +254,11 @@ export const updateAccessToken = CatchAsyncError(
       //   accessToken,
       // });
 
-      next();
+      return next();
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // get user info
@@ -270,7 +270,7 @@ export const getUserInfo = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // social authentication
@@ -296,7 +296,7 @@ export const socialAuthentication = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // update user info
@@ -329,7 +329,7 @@ export const updateUserInfo = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // update user password
@@ -374,7 +374,7 @@ export const updatePassword = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // update profile avatar
@@ -431,7 +431,7 @@ export const updateProfilePicture = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // get all users --- only for admin
@@ -442,19 +442,30 @@ export const getAllUsers = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
-// update user role
+// update user role --- only for admin
 export const updateUserRole = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id, role } = req.body;
-      await updateUserRoleService(res, id, role);
+      const { email, role } = req.body;
+
+      const isUserExist = await userModel.findOne({ email });
+
+      if (isUserExist) {
+        const id = isUserExist._id;
+        updateUserRoleService(res, id, role);
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "User Not Found!",
+        });
+      }
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // delete user
@@ -480,5 +491,5 @@ export const deleteUser = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
