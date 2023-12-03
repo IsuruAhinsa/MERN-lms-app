@@ -17,7 +17,10 @@ type Props = {};
 
 const Page = (props: Props) => {
   const { theme, setTheme } = useTheme();
-  const { isLoading, data } = useGetAllUsersQuery({});
+  const { isLoading, data, refetch } = useGetAllUsersQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
   const [active, setActive] = useState(false);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("admin");
@@ -81,6 +84,7 @@ const Page = (props: Props) => {
 
   const handleSubmit = async () => {
     await updateUserRole({ email, role });
+    refetch();
   };
 
   useEffect(() => {

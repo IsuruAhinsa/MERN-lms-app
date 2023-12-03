@@ -24,7 +24,10 @@ type Props = {};
 
 const Page = (props: Props) => {
   const { theme, setTheme } = useTheme();
-  const { isLoading, data } = useGetAllUsersQuery({});
+  const { isLoading, data, refetch } = useGetAllUsersQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
   const [open, setOpen] = React.useState(false);
   const [userId, setUserId] = React.useState("");
   const [deleteUser, { isSuccess, error }] = useDeleteUserMutation();
@@ -91,6 +94,7 @@ const Page = (props: Props) => {
     const id = userId;
     await deleteUser(id);
     setOpen(false);
+    refetch();
   };
 
   useEffect(() => {
