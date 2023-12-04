@@ -9,6 +9,7 @@ import {
   editCourse,
   generateVideoUrl,
   getAllCourses,
+  getAllCoursesForAdmin,
   getCourseByUser,
   getSingleCourse,
   uploadCourse,
@@ -33,6 +34,13 @@ courseRouter.put(
 courseRouter.get("/get-single-course/:id", isAuthenticated, getSingleCourse);
 
 courseRouter.get("/get-courses", isAuthenticated, getAllCourses);
+
+courseRouter.get(
+  "/get-courses-for-admin",
+  isAuthenticated,
+  authorizeRoles("admin"),
+  getAllCoursesForAdmin
+);
 
 courseRouter.get("/get-course-content/:id", isAuthenticated, getCourseByUser);
 

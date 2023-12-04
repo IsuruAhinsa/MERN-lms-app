@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { NextFunction, Response, Request } from "express";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import courseModel from "../models/course.model";
 
@@ -10,5 +10,17 @@ export const createCourse = CatchAsyncError(
       success: true,
       course,
     });
-  },
+  }
+);
+
+// get all courses
+export const getAllCoursesService = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const courses = await courseModel.find();
+
+    res.status(200).json({
+      success: true,
+      courses,
+    });
+  }
 );

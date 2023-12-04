@@ -4,14 +4,27 @@ import CourseData from "@/app/components/Admin/Course/CourseData";
 import CourseInformation from "@/app/components/Admin/Course/CourseInformation";
 import CourseOptions from "@/app/components/Admin/Course/CourseOptions";
 import CoursePreview from "@/app/components/Admin/Course/CoursePreview";
-import { useCreateCourseMutation } from "@/redux/features/course/courseApi";
+import {
+  useEditCourseMutation,
+  useGetAllCoursesQuery,
+} from "@/redux/features/course/courseApi";
 import { redirect } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 type Props = {};
 
-const Page = (props: Props) => {
+const Page = ({ params }: any) => {
+  // get id from url parameters
+  const id = params?.id;
+
+  const { isLoading, data, refetch } = useGetAllCoursesQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
+  // get single course from all courses
+  const course = data && data.courses.find((item: any) => item._id === id);
+
   const [active, setActive] = useState(0);
   const [courseInfo, setCourseInfo] = useState({
     name: "",
@@ -41,8 +54,7 @@ const Page = (props: Props) => {
     },
   ]);
   const [courseData, setCourseData] = useState({});
-  const [createCourse, { isSuccess, error, isLoading }] =
-    useCreateCourseMutation();
+  const [editCourse, { isSuccess, error }] = useEditCourseMutation();
 
   const handleSubmit = async () => {
     // format benefits array
@@ -89,15 +101,31 @@ const Page = (props: Props) => {
 
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
-
-    if (!isLoading) {
-      await createCourse(data);
-    }
+    await editCourse({ id, data });
   };
 
   useEffect(() => {
+    if (course) {
+      setCourseInfo({
+        name: course.name,
+        description: course.description,
+        price: course.price,
+        estimatedPrice: course.estimatedPrice,
+        tags: course.tags,
+        level: course.level,
+        demoUrl: course.demoUrl,
+        thumbnail: course?.thumbnail?.url,
+      });
+
+      setBenefits(course.benefits);
+      setPrerequisites(course.prerequisites);
+      setCourseContentData(course.courseData);
+    }
+  }, [course]);
+
+  useEffect(() => {
     if (isSuccess) {
-      toast.success("Course created successfully!");
+      toast.success("Course updated successfully!");
       redirect("/admin/courses");
     }
 
@@ -147,6 +175,7 @@ const Page = (props: Props) => {
             courseData={courseData}
             active={active}
             setActive={setActive}
+            isEdit={true}
           />
         )}
       </div>

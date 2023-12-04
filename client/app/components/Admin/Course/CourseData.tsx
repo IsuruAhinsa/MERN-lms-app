@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 type Props = {
   benefits: { title: string }[];
-  SetBenefits: (benefits: { title: string }[]) => void;
+  setBenefits: (benefits: { title: string }[]) => void;
   prerequisites: { title: string }[];
   setPrerequisites: (prerequisites: { title: string }[]) => void;
   active: number;
@@ -14,7 +14,7 @@ type Props = {
 
 const CourseData: FC<Props> = ({
   benefits,
-  SetBenefits,
+  setBenefits,
   prerequisites,
   setPrerequisites,
   active,
@@ -23,11 +23,11 @@ const CourseData: FC<Props> = ({
   const handleBenifitChange = (index: number, value: any) => {
     const updatedBenifits = [...benefits];
     updatedBenifits[index].title = value;
-    SetBenefits(updatedBenifits);
+    setBenefits(updatedBenifits);
   };
 
   const handleAddBenifit = () => {
-    SetBenefits([...benefits, { title: "" }]);
+    setBenefits([...benefits, { title: "" }]);
   };
 
   const handlePrerequisiteChange = (index: number, value: any) => {

@@ -17,6 +17,7 @@ import Loader from "@/app/components/Loader";
 import { format } from "timeago.js";
 import { useDeleteCourseMutation } from "@/redux/features/course/courseApi";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 type Props = {};
 
@@ -43,9 +44,9 @@ const Page = (props: Props) => {
       renderCell: (params: any) => {
         return (
           <>
-            <Button>
+            <Link href={`/admin/edit-course/${params.row.id}`}>
               <AiOutlineEdit size={20} />
-            </Button>
+            </Link>
           </>
         );
       },
