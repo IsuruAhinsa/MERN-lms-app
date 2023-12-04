@@ -181,7 +181,12 @@ const AdminSidebar: FC<Props> = ({
               </MenuItem>
             </SubMenu>
             <SubMenu label="Customization">
-              <MenuItem icon={<IoNewspaperSharp />}>Hero</MenuItem>
+              <MenuItem
+                component={<Link href="/admin/hero" />}
+                icon={<IoNewspaperSharp />}
+              >
+                Hero
+              </MenuItem>
               <MenuItem icon={<IoChatboxEllipses />}> FAQ</MenuItem>
               <MenuItem icon={<IoFileTrayFull />}> Categories</MenuItem>
             </SubMenu>

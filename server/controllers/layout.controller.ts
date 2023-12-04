@@ -24,12 +24,15 @@ export const createLayout = CatchAsyncError(
         });
 
         const banner = {
-          image: {
-            public_id: myCloud.public_id,
-            url: myCloud.secure_url,
+          type: "Banner",
+          banner: {
+            image: {
+              public_id: myCloud.public_id,
+              url: myCloud.secure_url,
+            },
+            title,
+            subTitle,
           },
-          title,
-          subTitle,
         };
 
         await layoutModel.create(banner);
@@ -44,7 +47,7 @@ export const createLayout = CatchAsyncError(
               question: item.question,
               answer: item.answer,
             };
-          }),
+          })
         );
 
         await layoutModel.create({ type: "FAQ", faq: faqItems });
@@ -58,7 +61,7 @@ export const createLayout = CatchAsyncError(
             return {
               title: item.title,
             };
-          }),
+          })
         );
 
         await layoutModel.create({
@@ -74,7 +77,7 @@ export const createLayout = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // edit layout
@@ -86,20 +89,23 @@ export const editLayout = CatchAsyncError(
       if (type === "Banner") {
         const bannerData: any = await layoutModel.findOne({ type: "Banner" });
 
-        if (bannerData) {
-          await cloudinary.v2.uploader.destroy(bannerData?.image.public_id);
-        }
-
         const { image, title, subTitle } = req.body;
 
-        const myCloud = await cloudinary.v2.uploader.upload(image, {
-          folder: "layout",
-        });
+        const data = image.startsWith("https")
+          ? bannerData
+          : await cloudinary.v2.uploader.upload(image, {
+              folder: "layout",
+            });
 
         const banner = {
+          type: "Banner",
           image: {
-            public_id: myCloud.public_id,
-            url: myCloud.secure_url,
+            public_id: image.startsWith("https")
+              ? bannerData.banner.image.public_id
+              : data?.public_id,
+            url: image.startsWith("https")
+              ? bannerData.banner.image.url
+              : data?.secure_url,
           },
           title,
           subTitle,
@@ -119,7 +125,7 @@ export const editLayout = CatchAsyncError(
               question: item.question,
               answer: item.answer,
             };
-          }),
+          })
         );
 
         await layoutModel.findByIdAndUpdate(faqData?._id, {
@@ -140,7 +146,7 @@ export const editLayout = CatchAsyncError(
             return {
               title: item.title,
             };
-          }),
+          })
         );
 
         await layoutModel.findByIdAndUpdate(categoryData?._id, {
@@ -156,14 +162,14 @@ export const editLayout = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
 
 // get layout by type
 export const getLayoutByType = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { type } = req.body;
+      const { type } = req.params;
       const layout = await layoutModel.findOne({ type });
       res.status(201).json({
         success: true,
@@ -172,5 +178,5 @@ export const getLayoutByType = CatchAsyncError(
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
-  },
+  }
 );
